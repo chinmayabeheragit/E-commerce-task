@@ -35,10 +35,33 @@ const getAllProducts = async () => {
   return await productQuery.findAllProducts();
 };
 
+const getProductsByName = async (name) => {
+  if (!name) {
+    throw new Error("Product name query parameter is required");
+  }
+  const products = await productQuery.findProductsByName(name);
+  return products;
+};
+
+const getProductsByCategory = async (categoryName) => {
+  return await productQuery.findProductsByCategoryName(categoryName);
+};
+
+const getProductsByPriceRange = async (min, max) => {
+  return await productQuery.findProductsByPriceRange(min, max);
+};
+
+const getProductsByPagination = async (page, limit) => {
+  return await productQuery.findProductsByPagination(page, limit);
+};
 module.exports = {
   addProduct,
   getProductById,
   updateProduct,
   deleteProduct,
   getAllProducts,
+  getProductsByName,
+  getProductsByCategory,
+  getProductsByPriceRange,
+  getProductsByPagination
 };

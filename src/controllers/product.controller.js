@@ -73,10 +73,108 @@ const getAllProducts = async (req, res, next) => {
   }
 };
 
+const getProductByName = async (req, res, next) => {
+  try {
+    const { name } = req.query;
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        message: "Query parameter 'name' is required"
+      });
+    }
+
+    const products = await productService.getProductsByName(name);
+    res.status(200).json({
+      success: true,
+      data: products
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getProductByCategory = async (req, res, next) => {
+  try {
+    const { name } = req.query;
+
+    if (!name) {
+      return res.status(400).json({ success: false, message: "Category name is required" });
+    }
+
+    const products = await productService.getProductsByCategory(name);
+
+    res.status(200).json({
+      success: true,
+      data: products
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getProductByPriceRange = async (req, res, next) => {
+  try {
+    const { min, max } = req.query;
+
+    if (!min || !max) {
+      return res.status(400).json({
+        success: false,
+        message: "Both min and max price are required"
+      });
+    }
+
+    const minPrice = parseFloat(min);
+    const maxPrice = parseFloat(max);
+
+    if (isNaN(minPrice) || isNaN(maxPrice)) {
+      return res.status(400).json({
+        success: false,
+        message: "Min and max must be valid numbers"
+      });
+    }
+
+    const products = await productService.getProductsByPriceRange(minPrice, maxPrice);
+
+    res.status(200).json({
+      success: true,
+      data: products
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getProductsByPagination = async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    if (page < 1 || limit < 1) {
+      return res.status(400).json({
+        success: false,
+        message: "Page and limit must be positive integers"
+      });
+    }
+
+    const result = await productService.getProductsByPagination(page, limit);
+
+    res.status(200).json({
+      success: true,
+      ...result
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addProduct,
   getProductById,
   updateProduct,
   deleteProduct,
   getAllProducts,
+  getProductByName,
+  getProductByCategory,
+  getProductByPriceRange,
+  getProductsByPagination
 };
