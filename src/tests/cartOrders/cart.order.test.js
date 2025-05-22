@@ -8,27 +8,31 @@ chai.use(chaiHttp);
 describe("Shopping Cart & Order Processing", () => {
   let userToken;
 
-  before((done) => {
-    chai.request(app)
-      .post("/api/users/login")
-      .send({ email: "user@example.com", password: "UserPass123!" })
-      .end((err, res) => {
-        userToken = res.body.token;
-        done();
-      });
-  });
+before((done) => {
+  chai.request(app)
+    .post("/api/users/login")
+    .send({ email: "testuser@example.com", password: "StrongPassword123!" })
+    .end((err, res) => {
+      if (err) return done(err);
+      userToken = res.body.token;
+      if (!userToken) return done(new Error("Login failed, token not received"));
+      done();
+    });
+});
 
-  it("should add product to cart", (done) => {
-    chai.request(app)
-      .post("/api/cartOrders")
-      .set("Authorization", `Bearer ${userToken}`)
-      .send({ productId: 1, quantity: 2 })
-      .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body).to.have.property("message").that.includes("added");
-        done();
-      });
-  });
+
+it("should add product to cart", (done) => {
+  chai.request(app)
+    .post("/api/cartOrders/cart") // <--- add /cart here
+    .set("Authorization", `Bearer ${userToken}`)
+    .send({ productId: 1, quantity: 2 })
+    .end((err, res) => {
+      expect(res).to.have.status(200);
+      expect(res.body).to.have.property("message").that.includes("added");
+      done();
+    });
+});
+
 
   it("should place an order", (done) => {
     chai.request(app)
