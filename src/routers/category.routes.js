@@ -2,11 +2,49 @@ const express = require("express");
 const router = express.Router();
 const categoryController = require("../controllers/category.controller");
 const { authenticate, authorizeAdmin } = require("../middleware/auth.middleware");
+const validateRequest = require("../middleware/validateRequest.middleware");
 
-router.post("/", authenticate, authorizeAdmin, categoryController.addCategory);
-router.put("/:id", authenticate, authorizeAdmin, categoryController.updateCategory);
-router.delete("/:id", authenticate, authorizeAdmin, categoryController.deleteCategory);
-router.get("/", authenticate, authorizeAdmin, categoryController.listCategories);
+
+const {
+  addCategoryValidator,
+  updateCategoryValidator,
+  deleteCategoryValidator,
+} = require("../validator/category.validator");
+
+router.post(
+  "/",
+  authenticate,
+  authorizeAdmin,
+  addCategoryValidator,
+  validateRequest,
+  categoryController.addCategory
+);
+
+router.put(
+  "/:id",
+  authenticate,
+  authorizeAdmin,
+  updateCategoryValidator,
+  validateRequest,
+  categoryController.updateCategory
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorizeAdmin,
+  deleteCategoryValidator,
+  validateRequest,
+  categoryController.deleteCategory
+);
+
+router.get(
+  "/",
+  authenticate,
+  authorizeAdmin,
+  categoryController.listCategories
+);
+
 
 // swagger/category.swagger.js
 /**

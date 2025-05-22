@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --timeout 10000 --exit src/tests/**/*.test.js",
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
@@ -12,10 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
@@ -30,6 +33,8 @@
   },
   "devDependencies": {
     "eslint": "^9.27.0",
-    "nodemon": "^3.1.10"
+    "mocha": "^11.4.0",
+    "nodemon": "^3.1.10",
+    "sinon": "^20.0.0"
   }
 }

@@ -5,7 +5,6 @@ const sendErrorResponse = require("./error.response");
 const errorHandler = (err, req, res, next) => {
   let customError = err;
 
-  // If not an instance of ApiError, wrap it
   if (!(err instanceof ApiError)) {
     customError = new ApiError(
       HttpStatus.INTERNAL_SERVER_ERROR,

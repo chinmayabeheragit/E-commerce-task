@@ -66,7 +66,7 @@ const findProductsByCategoryName = async (categoryName) => {
         as: "category",
         where: {
           name: {
-            [Op.iLike]: `%${categoryName}%`  // case-insensitive match
+            [Op.iLike]: `%${categoryName}%`  
           }
         }
       }

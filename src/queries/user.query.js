@@ -9,8 +9,15 @@ const createUser = async (userData) => {
   return await User.create(userData);
 };
 
+const findAllUsers = async () => {
+  return await User.findAll({
+    attributes: { exclude: ["password"] },
+  });
+};
+
+
 module.exports = {
   findUserByEmail,
   createUser,
-  // Add other user-related queries here
+  findAllUsers
 }

@@ -1,21 +1,85 @@
 const express = require("express");
 const router = express.Router();
-
 const productController = require("../controllers/product.controller");
 const { authenticate, authorizeAdmin } = require("../middleware/auth.middleware");
-const upload = require("../middleware/upload.middleware");
+const upload = require("../middleware/upload.middleware");  
+const validateRequest = require("../middleware/validateRequest.middleware");
 
-router.post("/", authenticate, authorizeAdmin, upload.single("image"), productController.addProduct);
-router.put("/:id", authenticate, authorizeAdmin, productController.updateProduct);
-router.delete("/:id", authenticate, authorizeAdmin, productController.deleteProduct);
+const {
+  addProductValidator,
+  updateProductValidator,
+  deleteProductValidator,
+  searchByNameValidator,
+  searchByCategoryValidator,
+  searchByPriceRangeValidator,
+  paginationValidator,
+} = require("../validator/product.validator");
 
-router.get("/", productController.getAllProducts);
-router.get("/:id", productController.getProductById);
-router.get("/search/name", productController.getProductByName); // By name
-router.get("/search/category", productController.getProductByCategory); // By category
-router.get("/search/price", productController.getProductByPriceRange); // By price range
-router.get("/paginate/products", productController.getProductsByPagination); // Pagination
+router.post(
+  "/",
+  authenticate,
+  authorizeAdmin,
+  upload.single("image"),
+  addProductValidator,
+  validateRequest,
+  productController.addProduct
+);
 
+router.put(
+  "/:id",
+  authenticate,
+  authorizeAdmin,
+  updateProductValidator,
+  validateRequest,
+  productController.updateProduct
+);
+
+router.delete(
+  "/:id",
+  authenticate,
+  authorizeAdmin,
+  deleteProductValidator,
+  validateRequest,
+  productController.deleteProduct
+);
+
+router.get(
+  "/",
+  productController.getAllProducts
+);
+
+router.get(
+  "/:id",
+  productController.getProductById
+);
+
+router.get(
+  "/search/name",
+  searchByNameValidator,
+  validateRequest,
+  productController.getProductByName
+);
+
+router.get(
+  "/search/category",
+  searchByCategoryValidator,
+  validateRequest,
+  productController.getProductByCategory
+);
+
+router.get(
+  "/search/price",
+  searchByPriceRangeValidator,
+  validateRequest,
+  productController.getProductByPriceRange
+);
+
+router.get(
+  "/paginate/products",
+  paginationValidator,
+  validateRequest,
+  productController.getProductsByPagination
+);
 
 /**
  * @swagger

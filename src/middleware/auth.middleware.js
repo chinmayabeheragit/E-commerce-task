@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
-const SECRET_KEY = process.env.JWT_SECRET || "your_jwt_secret"; // Store in .env
+const SECRET_KEY = process.env.JWT_SECRET || "your_jwt_secret"; 
 
-// Verify token and attach user to request
 const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,14 +11,13 @@ const authenticate = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded; // { id, email, role }
+    req.user = decoded;
     next();
   } catch (err) {
     return res.status(403).json({ message: "Forbidden: Invalid token" });
   }
 };
 
-// Restrict access to admin only
 const authorizeAdmin = (req, res, next) => {
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Forbidden: Admins only" });
@@ -27,7 +25,6 @@ const authorizeAdmin = (req, res, next) => {
   next();
 };
 
-// Restrict access to customer only
 const authorizeCustomer = (req, res, next) => {
   if (req.user.role !== "customer") {
     return res.status(403).json({ message: "Forbidden: Customers only" });

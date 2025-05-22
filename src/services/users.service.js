@@ -4,7 +4,7 @@ const userQuery = require("../queries/user.query");
 const ApiError = require("../errorHandler/apiError");
 const HttpStatus = require("../errorHandler/error.constants");
 
-exports.registerUser = async (email, password, role) => {
+const registerUser = async (email, password, role) => {
   const existingUser = await userQuery.findUserByEmail(email);
   if (existingUser) throw new ApiError(HttpStatus.CONFLICT, "Email already registered");
 
@@ -14,7 +14,7 @@ exports.registerUser = async (email, password, role) => {
   return { message: "User registered successfully", user: newUser };
 };
 
-exports.loginUser = async (email, password) => {
+const loginUser = async (email, password) => {
   const user = await userQuery.findUserByEmail(email);
   if (!user) throw new ApiError(HttpStatus.UNAUTHORIZED, "Invalid credentials");
 
@@ -23,4 +23,20 @@ exports.loginUser = async (email, password) => {
 
   const token = jwt.generateToken({ id: user.id, email: user.email, role: user.role });
   return { message: "Login successful", token };
+};
+
+const getAllUsers = async () => {
+  const users = await userQuery.findAllUsers();
+
+  if (!users || users.length === 0) {
+    throw new ApiError(HttpStatus.NOT_FOUND, "No users found");
+  }
+
+  return { message: "Users retrieved successfully", data: users };
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getAllUsers,
 };

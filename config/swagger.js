@@ -1,4 +1,3 @@
-// D:/portfolio project/E-commerce-task/config/swagger.js
 
 const swaggerJSDoc = require("swagger-jsdoc");
 
